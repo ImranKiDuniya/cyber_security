@@ -1,0 +1,10 @@
+JavaScript-এর গুরুত্বপূর্ণ কিছু Function
+	A. Alert 
+		alert('XSS') 			XSS লেখা একটি alert box প্রদর্শন করে।
+	B. Console Log				browser-এর JavaScript Console-এ কোনো value প্রদর্শন করা যায়।
+		console.log("test text")
+	C. Encoding 				
+		btoa("string") 			একটি string-কে Base64 এ রূপান্তর করে।
+		atob("aGVsbG8=")		Base64 decode করতে ব্যবহৃত হয়।
+	D. document.cookie			বর্তমান document-এর জন্য JavaScript-এ access করা যায় এমন cookie-সংক্রান্ত তথ্য পড়া যায়।
+		alert(document.cookie)

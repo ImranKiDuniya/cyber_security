@@ -1,0 +1,42 @@
+Cross-Site Scripting(XSS): এমন একটি vulnerability, যার মাধ্যমে attacker কোনো web page-এ malicious script inject করতে পারে, যা অন্য user-এর browser-এ execute হয়।
+	XSS Attack প্রধানত তিন ধরনের।
+		Reflected XSS : যখন Application কোনো HTTP Request থেকে Data গ্রহণ করে এবং সেটিকে নিরাপদভাবে প্রক্রিয়া না করে তাৎক্ষণিক HTTP Response-এ অন্তর্ভুক্ত করে।
+		Stored XSS : যখন Application কোনো Untrusted Source থেকে Data গ্রহণ করে, সেটি সংরক্ষণ করে এবং পরে নিরাপদভাবে যাচাই বা Encode না করে HTTP Response-এ দেখায়।
+		DOM-Based XSS : যখন Client-Side JavaScript কোনো Untrusted Source থেকে Data নিয়ে সেটিকে অনিরাপদভাবে Document Object Model (DOM)-এ লেখে।
+	
+	Same-Origin Policy (SOP): আধুনিক web browser-এ ব্যবহৃত একটি security mechanism। এর উদ্দেশ্য হলো, একটি web page-এর malicious script যেন অন্য origin-এর page থেকে sensitive data access করতে না পারে।
+	
+	
+	Implications of XSS
+		Session hijacking
+		Phishing and credential theft
+		Social engineering
+		Content manipulation and defacement
+		Data exfiltration
+		Malware installation
+	
+Portswigger lab solve 
+	1. Reflected
+		<script>alert(1)</script>	search it
+	2. Stored
+		<script>alert(1)</script> 	comment it & enter a name , email, website. 
+	3. DOM XSS in innerHTML sink
+		<img src=1 onerror=alert(1)>	search it
+	4. DOM XSS in jQuery selector sink using a hashchange event
+
+Payloads link -> https://github.com/coffinxp/payloads/blob/main/xss.txt
+		
+
+Endpoint			কী পরীক্ষা করবে
+--------                        -------------
+/search?q=test			Search input
+/search?query=test		Search query
+/index.php?name=test		URL parameter
+/profile?name=test		Profile field
+/comment			Comment submission
+/feedback			Feedback form
+/contact			Contact form
+/redirect?url=test		URL/redirect handling
+/product?category=test		Category parameter
+/error?message=test		Error message reflection
+		

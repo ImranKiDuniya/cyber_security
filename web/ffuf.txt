@@ -1,0 +1,37 @@
+ffuf -> Fuzz Faster U Fool
+	ffuf -u http://IP/FUZZ -w /usr/share/wordlists/SecLists/Discovery/Web-Content/big.txt					search possible file & dir
+	
+	ffuf -u http://IP/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-files-lowercase.txt			file search
+	ffuf -u http://IP/indexFUZZ -w /usr/share/seclists/Discovery/Web-Content/web-extensions.txt				File extensions search
+	ffuf -u http://IP/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-words-lowercase.txt -e .php,.txt	নির্দিষ্ট extension-সহ file search
+	ffuf -u http://IP/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories-lowercase.txt		directories search
+	
+	ffuf -u http://IP/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-files-lowercase.txt -fc 403		hide from the output all 403
+	ffuf -u http://IP/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-files-lowercase.txt -mc 200		show only 200
+	ffuf -u http://IP/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-files-lowercase.txt -fr '/\..*'		-fr  Filter regular expression
+	
+find parameter
+	ffuf -u 'http://[url]/?FUZZ=1' -c -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt -fw 39
+	ffuf -u 'http://[url]/?FUZZ=1' -c -w /usr/share/seclists/Discovery/Web-Content/raft-medium-words-lowercase.txt -fw 39
+
+find parameter's value
+	seq 0 255 | ffuf -u 'http://[url]/?id=FUZZ' -c -w - -fw 33
+
+find password
+	ffuf -u http://[url]/ -c -w /usr/share/seclists/Passwords/Leaked-Databases/hak5.txt -X POST -d 'uname=Dummy&passwd=FUZZ&submit=Submit' -fs 1435 -H 'Content-Type: application/x-www-form-urlencoded'
+
+subdomain enumeration
+	ffuf -u http://FUZZ.mydomain.com -c -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt
+Virtual host enumeration
+	ffuf -u http://mydomain.com -c -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -H 'Host: FUZZ.mydomain.com' -fs 0
+
+Burpsuite
+	ffuf -u http://IP/FUZZ -c -w /usr/share/seclists/Discovery/Web-Content/common.txt -x http://127.0.0.1:8080		সব ট্রাফিক Proxy দিয়ে পাঠানো
+	ffuf -u http://IP/FUZZ -c -w /usr/share/seclists/Discovery/Web-Content/common.txt -replay-proxy http://127.0.0.1:8080	শুধু match হওয়া request Proxy-তে পাঠানো
+	
+	
+	
+	id
+
+
+

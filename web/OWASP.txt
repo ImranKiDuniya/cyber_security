@@ -1,0 +1,33 @@
+OWASP - Open Web Application Security Project 
+
+# OWASP Top 10 2025: Application Design Flaws
+	## AS02: Security Misconfigurations
+		ওয়েবপেজটি খুললে `/api/user/123` ডিরেক্টরিটি পাওয়া যাবে। এখানে John-এর User ID হলো `123`। এরপর `/api/user/john` URL-এ গেলে FLAG পাওয়া যাবে।
+
+	## AS03: Software Supply Chain Failures
+	নিচের Command-টি ব্যবহার করলে FLAG পাওয়া যাবে:
+	curl http://10.49.160.61:5003/api/process -X POST -H 'Content-Type: application/json' -d '{"data":"debug"}'
+	এখানে `Content-Type` এবং `data=debug`-এর মতো প্রয়োজনীয় তথ্যগুলো দেওয়া Python ফাইলে পাওয়া যাবে। এর আগে Burp Suite ব্যবহার করে একটি POST Request তৈরি করার চেষ্টা করতে হবে। তাহলে এ সম্পর্কে আরও কিছু তথ্য পাওয়া যাবে।
+	
+	## AS04: Cryptographic Failures
+		ওয়েবপেজটি Inspect করলে `decrypt.js` নামে একটি ফাইল পাওয়া যাবে। ওই ফাইলে Secret Key, Encryption Mode এবং Data Size-সম্পর্কিত তথ্য পাওয়া যাবে। এরপর `AES-123 ECB` নির্বাচন করে একটি Online Encryption/Decryption Tool ব্যবহার করে ডেটা Decode করলে FLAG পাওয়া যাবে।
+	
+	## AS06: Insecure Design
+		নিচের Gobuster Command-টি ব্যবহার করলে `admin` নামে একটি ডিরেক্টরি পাওয়া যাবে:
+		gobuster dir -u http://10.49.160.61:5005/api/messages -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,txt,html,js
+		এরপর নিচের URL-এ গেলে FLAG পাওয়া যাবে: http://10.49.160.61:5005/api/messages/admin`
+		/api/messages` ডিরেক্টরিটি খুঁজে পাওয়ার জন্য Google-এ **"common API endpoints"** লিখে সার্চ করা যেতে পারে। এ ছাড়া, আমাদের ওয়েবপেজটি যেহেতু একটি Messages Site, তাই এই ধরনের API Endpoint থাকার সম্ভাবনাও বিবেচনা করা যায়।
+
+		
+# OWASP Top 10 2025: Insecure Data Handling
+	## A04: Cryptographic Failures
+		"KEY_" দেওয়া ছিল, যেখানে ৪র্থ অক্ষরটি একটি সংখ্যা হবে। সেটি অনুমান করতে হবে। Secret Key হলো KEY1। Key পেয়ে গেলেই FLAG পাওয়া যাবে।
+	## A05: Injection
+		নিচের Statement-টি Execute করলে FLAG পাওয়া যাবে।
+		{{ request.application.__globals__.__builtins__.open('flag.txt').read() }}
+	## A08: Software or Data Integrity Failures 
+		পেজে একটি Python Code-এর উদাহরণ পাওয়া যাবে। কোডটি Run করলে একটি Base64-Encoded Text পাওয়া যাবে। এরপর পেজ থেকে ওই Text-টি Deserialize করলে FLAG পাওয়া যাবে।
+		
+
+OWASP ZAP - Zed Attack Proxy
+	

